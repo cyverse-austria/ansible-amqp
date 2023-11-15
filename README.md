@@ -27,7 +27,7 @@ ansible-playbook -i inventory/ main.yml --user root
 ssh root@AMQP_HOST
 
 # check amqp status
-rabbitmq-diagnostics status
+systemctl status rabbitmq-server
 
 # List of all vhosts
 curl -u guest:guest -X PUT http://AMQP_HOST:15672/api/vhosts | json_pp
