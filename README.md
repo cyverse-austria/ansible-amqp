@@ -77,3 +77,9 @@ rabbitmqadmin -H AMQP_HOST -u cyverse -p PASSWORD list vhosts
 
 ```
 
+
+**The institution and hosting server firewalls need to allow the following communication.**
+
+* `1247-1248/tcp` Need to be open for inbound and outbound connections from iRODS server and iRODS resource server.
+
+* `20000-20199/tcp,udp` Need to be open for inbound connections from all the **Condor** and **Kubernetes** worker nodes to allow the Discovery Environment to access data using the web interface and while doing analyses.
