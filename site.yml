@@ -1,0 +1,7 @@
+---
+
+- name: RabbitMQ
+  hosts: all
+  become: true
+  roles:
+    - rabbitmq

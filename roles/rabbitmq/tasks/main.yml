@@ -1,0 +1,20 @@
+---
+- name: Install rabbitmq
+  ansible.builtin.include_tasks: "{{ ansible_os_family }}.yml"
+
+- name: Create rabbitmq config file
+  ansible.builtin.template:
+    src: etc/rabbitmq/rabbitmq.conf.j2
+    dest: /etc/rabbitmq/rabbitmq.conf
+    owner: rabbitmq
+    group: rabbitmq
+    mode: "0644"
+  notify:
+    - Start broker
+
+- name: Enable management plugin
+  rabbitmq_plugin:
+    names: rabbitmq_management
+    state: enabled
+  notify:
+    - Start broker

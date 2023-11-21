@@ -1,0 +1,6 @@
+---
+- name: Start broker
+  ansible.builtin.systemd:
+    name: rabbitmq-server
+    enabled: true
+    state: restarted
