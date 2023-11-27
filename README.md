@@ -4,21 +4,47 @@ This is a collection of playbooks for deploying a AMQP broker for the CyVerse Da
 
 This is original taken from [ds-deploy](https://gitlab.cyverse.org/tugraz/ds-deploy).
 
-## Variables
+## Role Variables
 
-None of these variables are required.
+| Variable               | Choices/Defaults | Comments |
+|:---------------------- | ----------------:|:-------- |
+| rabbitmq__version      | "3.10.8-1.1"     | To change this default other apt-repos have to be enabled |
+| rabbitmq__broker_port  | 5672             | The port used by the broker |
+| rabbitmq__management_port | 15672         | The port used by the management interface |
+| rabbitmq__user.name    | "cyverse"        | The AMQP broker admin user |
+| rabbitmq__user.pass    | "supersecret"    | Change on command-line (in pipeline) |
+| rabbitmq__vhosts       | "/cyverse/de"<br/>"/cyverse/data-store"            | List of vhosts |
 
-Variable               | Default | Choices | Comments
----------------------- | ------- | ------- | --------
-`amqp_admin_username`  | guest   |         | The AMQP broker admin user
-`amqp_admin_password`  | guest   |         | The password for `amqp_admin_username`
-`amqo_broker_port`     | 5672    |         | The port used by the broker
-`amqp_management_port` | 15672   |         | The port used by the management interface
 
+## example playbook
 
-## run playbook
+### minimal example
+
+```yaml
+- hosts: all
+  roles:
+    - role: rabbitmq
+```
+
+### full feature example
+
+```yaml
+- hosts: all
+  roles:
+    - role: rabbitmq
+      rabbitmq__broker_port: 1234
+      rabbitmq__management_port: 12345
+      rabbitmq__vhosts:
+        - "/mynew/first"
+        - "/mynew/second"
+      rabbitmq__user:
+        name: "thatsme"
+        pass: "&thisismy1pass"
+```
+## run the playbook
+
 ```bash
-ansible-playbook -i inventory/ main.yml --user root
+ansible-playbook --inventory <inventory-file/dir>  --user root site.yml
 ```
 
 ## check status of rabbitmq
@@ -30,7 +56,7 @@ ssh root@AMQP_HOST
 systemctl status rabbitmq-server
 
 # List of all vhosts
-curl -u guest:guest -X PUT http://AMQP_HOST:15672/api/vhosts | json_pp
+curl -i -u ${rabbitmq__user.name}:${rabbitmq__user.pass} http://localhost:15672/api/vhosts | <json_pp | jq .>
 
 # list users
 rabbitmqctl list_users
@@ -38,27 +64,22 @@ rabbitmqctl list_users
 # list vhosts
 rabbitmqctl list_vhosts
 
-# TODO: via ansible
 # create vhost
 rabbitmqctl add_vhost /cyverse/de
 rabbitmqctl add_vhost /cyverse/data-store
 
-# TODO: via ansible
 # add new user
 # rabbitmqctl add_user <username> <password>
 rabbitmqctl add_user cyverse password
 
-# TODO: via ansible
 # Granting Permissions to a User
 # rabbitmqctl set_permissions -p "custom-vhost" "username" ".*" ".*" ".*"
 rabbitmqctl set_permissions -p "/cyverse/de" "cyverse" ".*" ".*" ".*"
 
-# TODO: via ansible
 # make user a administrator
 # rabbitmqctl set_user_tags username administrator
 rabbitmqctl set_user_tags cyverse administrator
 
-# TODO: via ansible
 # start rabbitmq
 rabbitmqctl start_app
 
