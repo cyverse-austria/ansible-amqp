@@ -1,0 +1,10 @@
+---
+# will be overwritten from pipeline
+
+# rabbitmq__vhosts:
+#   - "/cyverse/de"
+#   - "/cyverse/data-store"
+#
+# rabbitmq__user:
+#   name: "cyverse"
+#   pass: "supersecret"
