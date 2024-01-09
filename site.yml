@@ -1,7 +1,7 @@
 ---
 
 - name: RabbitMQ
-  hosts: all
+  hosts: amqp
   become: true
   roles:
     - rabbitmq
