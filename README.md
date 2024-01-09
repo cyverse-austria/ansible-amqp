@@ -21,7 +21,7 @@ This is original taken from [ds-deploy](https://gitlab.cyverse.org/tugraz/ds-dep
 ### minimal example
 
 ```yaml
-- hosts: all
+- hosts: amqp
   roles:
     - role: rabbitmq
 ```
@@ -29,7 +29,7 @@ This is original taken from [ds-deploy](https://gitlab.cyverse.org/tugraz/ds-dep
 ### full feature example
 
 ```yaml
-- hosts: all
+- hosts: amqp
   roles:
     - role: rabbitmq
       rabbitmq__broker_port: 1234
